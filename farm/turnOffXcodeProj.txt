@@ -1,0 +1,3 @@
+# Used to set qmake to create a Makefile instead of an xcode project
+
+qmake -spec macx-g++

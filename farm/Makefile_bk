@@ -1,0 +1,7 @@
+CC            = gcc
+CXX           = g++
+CFLAGS=-Wall -g
+
+clean:
+	rm -f main
+all: main
