@@ -1,87 +1,35 @@
-#include <QtGui/QApplication>
-#include <QtGui/QPushButton>
-#include <sstream>
-#include <iostream>
-
-class Utils {
-    public:
-        std::string intToString (int);
-        const char * intToConstCharPointer (int);
-        std::string floatToString (float);
-        const char * floatToConstCharPointer (float);
-};
-
-std::string Utils::intToString (int a) {
-    std::ostringstream temp;
-    temp<<a;
-    return temp.str();
-}
-
-const char * Utils::intToConstCharPointer (int a) {
-    std::string temp_string = intToString(a);
-    return temp_string.c_str();
-}
-
-std::string Utils::floatToString (float a) {
-    std::ostringstream temp;
-    temp<<a;
-    return temp.str();
-}
-
-const char * Utils::floatToConstCharPointer (float a) {
-    std::string temp_string = floatToString(a);
-    return temp_string.c_str();
-}
-
-class Animal : public Utils {
-    protected:
-        int p_health, p_hunger, p_mood, p_weight, p_meat;
-        float p_repro_rate;
-    public:
-        Animal (int health=100, int hunger=0, int mood=80, int weight=200, 
-            int meat=150, float repro_rate=1.1);  
-        int getHealth (void) {return p_health;};
-        int getHunger (void) {return p_hunger;};
-        int getMood (void) {return p_mood;};
-        int getWeight (void) {return p_weight;};
-        int getMeat (void) {return p_meat;};
-        float getReproductionRate(void) {return p_repro_rate;};
-        const char * getHealthAsString (void) {return intToConstCharPointer(p_health);};
-        const char * getHungerAsString (void) {return intToConstCharPointer(p_hunger);};
-        const char * getMoodAsString (void) {return intToConstCharPointer(p_mood);};
-        const char * getWeightAsString (void) {return intToConstCharPointer(p_weight);};
-        const char * getMeatAsString (void) {return intToConstCharPointer(p_meat);};
-        const char * getReproductionRateAsString (void) {return floatToConstCharPointer(p_repro_rate);};
-        void feed (int);
-};
-
-Animal::Animal (int health, int hunger, int mood, int weight, 
-            int meat, float repro_rate) {
-
-    p_health = health;
-    p_hunger = hunger;
-    p_mood = mood;
-    p_weight = weight;
-    p_meat = meat;
-    p_repro_rate = repro_rate;
-
-}
-
-class Cow : public Animal {
-    protected:
-        float p_milk = 2.0;
-    public:
-        float getMilk (void) {return p_milk;};
-};
+#include <QtGui>
+#include <custom_widgets.h>
+#include <animals.h>
 
 int main(int argc, char **argv)
 {
     QApplication app (argc, argv);
- 
+    app.setStyle("Plastique");
+
+    QDialog * dialog = new QDialog();
+
+    QVBoxLayout * v_main_layout = new QVBoxLayout(dialog);
+
     Cow cow;
-    const char * weight = cow.getReproductionRateAsString();
-    QPushButton button (weight);
-    button.show();
- 
+    int health = cow.getHealth();
+    int hunger = cow.getHunger();
+    int mood = cow.getMood();
+    int weight = cow.getWeight();
+    int meat = cow.getMeat();
+    CustomProgressBar prog_health(0, 100, health, "HP");
+    CustomProgressBar prog_hunger(0, 100, hunger, "Hunger");
+    CustomProgressBar prog_mood(0, 100, mood, "Mood");
+    CustomProgressBar prog_weight(0, 100, weight, "Weight Kg");
+    CustomProgressBar prog_meat(0, 100, meat, "Yield Kg");
+
+    v_main_layout->addWidget(&prog_health);
+    v_main_layout->addWidget(&prog_hunger);
+    v_main_layout->addWidget(&prog_mood);
+    v_main_layout->addWidget(&prog_weight);
+    v_main_layout->addWidget(&prog_meat);
+
+    dialog->show();
+
     return app.exec();
 }
